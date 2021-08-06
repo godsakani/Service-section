@@ -29,3 +29,25 @@ h6 {
   height: 2px;
   background-color:orange;
 }
+.map-container-section {
+  overflow:hidden;
+  padding-bottom:56.25%;
+  position:relative;
+  height:0;
+}
+.map-container-section iframe {
+  left:0;
+  top:0;
+  height:100%;
+  width:100%;
+  position:absolute;
+}
+.deep-purple{
+  color: #ffffff;
+}
+.lin11{
+  color:#ffffff;
+}
+a:hover{
+  color: #ffffff;
+}
