@@ -1,160 +1,50 @@
-const DOMstrings = {
-  stepsBtnClass: 'multisteps-form__progress-btn',
-  stepsBtns: document.querySelectorAll(`.multisteps-form__progress-btn`),
-  stepsBar: document.querySelector('.multisteps-form__progress'),
-  stepsForm: document.querySelector('.multisteps-form__form'),
-  stepsFormTextareas: document.querySelectorAll('.multisteps-form__textarea'),
-  stepFormPanelClass: 'multisteps-form__panel',
-  stepFormPanels: document.querySelectorAll('.multisteps-form__panel'),
-  stepPrevBtnClass: 'js-btn-prev',
-  stepNextBtnClass: 'js-btn-next' };
+var currentTab = 0;
+document.addEventListener("DOMContentLoaded", function(event) {
 
 
-const removeClasses = (elemSet, className) => {
-
-  elemSet.forEach(elem => {
-
-    elem.classList.remove(className);
-
-  });
-
-};
-
-const findParent = (elem, parentClass) => {
-
-  let currentNode = elem;
-
-  while (!currentNode.classList.contains(parentClass)) {
-    currentNode = currentNode.parentNode;
-  }
-
-  return currentNode;
-
-};
-
-const getActiveStep = elem => {
-  return Array.from(DOMstrings.stepsBtns).indexOf(elem);
-};
-
-const setActiveStep = activeStepNum => {
-
-  removeClasses(DOMstrings.stepsBtns, 'js-active');
-
-  DOMstrings.stepsBtns.forEach((elem, index) => {
-
-    if (index <= activeStepNum) {
-      elem.classList.add('js-active');
-    }
-
-  });
-};
-
-const getActivePanel = () => {
-
-  let activePanel;
-
-  DOMstrings.stepFormPanels.forEach(elem => {
-
-    if (elem.classList.contains('js-active')) {
-
-      activePanel = elem;
-
-    }
-
-  });
-
-  return activePanel;
-
-};
-
-const setActivePanel = activePanelNum => {
-
-  removeClasses(DOMstrings.stepFormPanels, 'js-active');
-
-  DOMstrings.stepFormPanels.forEach((elem, index) => {
-    if (index === activePanelNum) {
-
-      elem.classList.add('js-active');
-
-      setFormHeight(elem);
-
-    }
-  });
-
-};
-
-const formHeight = activePanel => {
-
-  const activePanelHeight = activePanel.offsetHeight;
-
-  DOMstrings.stepsForm.style.height = `${activePanelHeight}px`;
-
-};
-
-const setFormHeight = () => {
-  const activePanel = getActivePanel();
-
-  formHeight(activePanel);
-};
-
-DOMstrings.stepsBar.addEventListener('click', e => {
-
-  const eventTarget = e.target;
-
-  if (!eventTarget.classList.contains(`${DOMstrings.stepsBtnClass}`)) {
-    return;
-  }
-
-  const activeStep = getActiveStep(eventTarget);
-
-  setActiveStep(activeStep);
-
-  setActivePanel(activeStep);
-});
-
-DOMstrings.stepsForm.addEventListener('click', e => {
-
-  const eventTarget = e.target;
-
-  if (!(eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`) || eventTarget.classList.contains(`${DOMstrings.stepNextBtnClass}`)))
-  {
-    return;
-  }
-
-  const activePanel = findParent(eventTarget, `${DOMstrings.stepFormPanelClass}`);
-
-  let activePanelNum = Array.from(DOMstrings.stepFormPanels).indexOf(activePanel);
-
-  if (eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`)) {
-    activePanelNum--;
-
-  } else {
-
-    activePanelNum++;
-
-  }
-
-  setActiveStep(activePanelNum);
-  setActivePanel(activePanelNum);
+showTab(currentTab);
 
 });
 
-window.addEventListener('load', setFormHeight, false);
+function showTab(n) {
+var x = document.getElementsByClassName("tab");
+x[n].style.display = "block";
+if (n == 0) {
+document.getElementById("prevBtn").style.display = "none";
+} else {
+document.getElementById("prevBtn").style.display = "inline";
+}
+if (n == (x.length - 1)) {
+document.getElementById("nextBtn").innerHTML = "Submit";
+} else {
+document.getElementById("nextBtn").innerHTML = "Next";
+}
+fixStepIndicator(n)
+}
 
-window.addEventListener('resize', setFormHeight, false);
+function nextPrev(n) {
+var x = document.getElementsByClassName("tab");
+if (n == 1 && !validateForm()) return false;
+x[currentTab].style.display = "none";
+currentTab = currentTab + n;
+if (currentTab >= x.length) {
+// document.getElementById("regForm").submit();
+// return false;
+//alert("sdf");
+document.getElementById("nextprevious").style.display = "none";
+document.getElementById("all-steps").style.display = "none";
+document.getElementById("register").style.display = "none";
+document.getElementById("text-message").style.display = "block";
 
 
-const setAnimationType = newType => {
-  DOMstrings.stepFormPanels.forEach(elem => {
-    elem.dataset.animation = newType;
-  });
-};
 
-//changing animation
-const animationSelect = document.querySelector('.pick-animation__select');
 
-animationSelect.addEventListener('change', () => {
-  const newAnimationType = animationSelect.value;
+}
+showTab(currentTab);
+}
 
-  setAnimationType(newAnimationType);
-});
+function validateForm() {
+var x, y, i, valid = true;
+x = document.getElementsByClassName("tab");
+y = x[currentTab].getElementsByTagName("input");
+for (i = 0; i < y.length; i++) { if (y[i].value=="" ) { y[i].className +=" invalid" ; valid=false; } } if (valid) { document.getElementsByClassName("step")[currentTab].className +=" finish" ; } return valid; } function fixStepIndicator(n) { var i, x=document.getElementsByClassName("step"); for (i=0; i < x.length; i++) { x[i].className=x[i].className.replace(" active", "" ); } x[n].className +=" active" ; }
